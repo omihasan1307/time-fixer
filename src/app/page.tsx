@@ -1,5 +1,4 @@
 import TimeSlider from "@/components/Time.slider";
-import TimeSlider2 from "@/components/Time.slider2";
 import { Card } from "antd";
 
 export default function Home() {
@@ -8,8 +7,7 @@ export default function Home() {
       <Card title="Business Hours" className="w-full">
         <Card>
           <h1 className="font-semibold mb-10">Custom Business Hours</h1>
-          <TimeSlider2 />
-          {/* <TimeSlider /> */}
+          <TimeSlider />
         </Card>
       </Card>
     </div>

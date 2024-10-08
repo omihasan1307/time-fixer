@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Slider, SliderSingleProps, Tooltip, Button } from "antd";
-import { useState } from "react";
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons"; // Import the delete icon
+import { Slider, Button, Tooltip, SliderSingleProps } from "antd";
+import { useState, useEffect } from "react";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 
-// Marks for the time range (12AM to 12PM)
 const marks: SliderSingleProps["marks"] = {
   0: "12AM",
   2: "2AM",
@@ -20,7 +20,6 @@ const marks: SliderSingleProps["marks"] = {
   24: "12AM",
 };
 
-// Array of weekdays
 const weekDays = [
   "Monday",
   "Tuesday",
@@ -31,7 +30,6 @@ const weekDays = [
   "Sunday",
 ];
 
-// Helper function to format time from slider value
 const formatTime = (value: number) => {
   const isAM = value < 12 || value === 24;
   const time = value % 12 === 0 ? 12 : value % 12;
@@ -40,116 +38,124 @@ const formatTime = (value: number) => {
 };
 
 const TimeSlider = () => {
-  const initialRanges = weekDays.reduce(
-    (acc, day) => ({ ...acc, [day]: [2, 12] }),
-    {}
-  );
+  const [ranges, setRanges] = useState<any>({});
+  const [enabledDays, setEnabledDays] = useState<any>({});
+  const [isMounted, setIsMounted] = useState(false);
 
-  const [timeRanges, setTimeRanges] = useState(initialRanges);
-  const [hoveredDay, setHoveredDay] = useState<string | null>(null);
+  useEffect(() => {
+    setRanges(
+      weekDays.reduce((acc: any, day: any) => {
+        acc[day] = day === "Saturday" || day === "Sunday" ? [] : [[0, 6]];
+        return acc;
+      }, {})
+    );
+    setEnabledDays({
+      Saturday: false,
+      Sunday: false,
+    });
+    setIsMounted(true);
+  }, []);
 
-  // Handle slider value change
-  const handleSliderChange = (day: string, value: [number, number]) => {
-    setTimeRanges((prevRanges) => ({ ...prevRanges, [day]: value }));
+  const handleAddRange = (day: string) => {
+    if (day === "Saturday" || day === "Sunday") {
+      setEnabledDays((prev: any) => ({ ...prev, [day]: true }));
+      setRanges((prevRanges: any) => ({
+        ...prevRanges,
+        [day]: [[0, 6]],
+      }));
+    } else {
+      setRanges((prevRanges: any) => ({
+        ...prevRanges,
+        [day]: [...prevRanges[day], [18, 22]],
+      }));
+    }
   };
 
-  // Handle delete action to set range to [0, 0]
-  const handleDelete = (day: string) => {
-    setTimeRanges((prevRanges) => ({ ...prevRanges, [day]: [0, 0] }));
+  const handleChange = (day: string, value: number[]) => {
+    const newRanges = [...ranges[day]];
+    for (let i = 0; i < value.length; i += 2) {
+      if (newRanges[i / 2]) {
+        newRanges[i / 2] = [value[i], value[i + 1]];
+      }
+    }
+    setRanges((prevRanges: any) => ({ ...prevRanges, [day]: newRanges }));
   };
-  console.log("time", timeRanges);
-  const handleAdd = (day: string) => {
-    setTimeRanges((prevRanges) => ({ ...prevRanges, [day]: [20, 22] }));
+
+  const handleDeleteRange = (day: string, index: number) => {
+    const newRanges = ranges[day].filter((_: any, i: any) => i !== index);
+    setRanges((prevRanges: any) => ({ ...prevRanges, [day]: newRanges }));
   };
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div>
-      {weekDays.map((day) => (
+      {weekDays?.map((day) => (
         <div
           key={day}
-          style={{ marginBottom: 20 }}
           className="lg:flex items-center justify-between pe-2 py-3 my-10"
-          onMouseEnter={() => setHoveredDay(day)} // Set hovered day on mouse enter
-          onMouseLeave={() => setHoveredDay(null)} // Reset hovered day on mouse leave
         >
           <h3 className="font-semibold">{day}</h3>
-          <p className="relative w-[93%]">
-            {timeRanges[day][0] === 0 && timeRanges[day][1] === 0 ? (
-              <span className="text-gray-500">
-                <Tooltip title="I'm offline (hover to add Operating hours)">
-                  <Slider
-                    range
-                    marks={marks}
-                    value={timeRanges[day]} // Changed from defaultValue to value
-                    min={0}
-                    max={24}
-                    step={2}
-                    disabled
-                    style={{ marginBottom: 15 }}
-                  />
-                </Tooltip>
-              </span>
-            ) : day === "Saturday" || day === "Sunday" ? (
-              <Tooltip title="I'm offline (hover to add Operating hours)">
-                <Slider
-                  range
-                  marks={marks}
-                  value={timeRanges[day]} // Changed from defaultValue to value
-                  min={0}
-                  max={24}
-                  step={2}
-                  disabled
-                  style={{ marginBottom: 15 }}
-                />
-              </Tooltip>
-            ) : (
-              <Slider
-                range
-                marks={marks}
-                value={timeRanges[day]} // Changed from defaultValue to value
-                min={0}
-                max={24}
-                step={2}
-                onChange={(value) =>
-                  handleSliderChange(day, value as [number, number])
-                }
-                tooltip={{
-                  open: true,
-                  formatter: (value: number | undefined) =>
-                    formatTime(value ?? 0),
-                }}
-                style={{ marginBottom: 15 }}
-              />
-            )}
-
-            {/* {hoveredDay === day &&
-              timeRanges[day][0] !== 0 &&
-              timeRanges[day][1] !== 0 && (
-                <Button
-                  type="danger"
-                  icon={<DeleteOutlined />} // Icon for delete button
-                  onClick={() => handleDelete(day)} // Delete the time range
-                  style={{
-                    position: "absolute",
-                    right: 50, // Adjust position as needed
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    marginLeft: 10,
-                  }}
-                />
-              )} */}
-            <Button
-              icon={<PlusOutlined />} // Icon for delete button
-              onClick={() => handleAdd(day)} // Delete the time range
-              style={{
-                position: "absolute",
-                right: 80, // Adjust position as needed
-                top: "50%",
-                transform: "translateY(-50%)",
-                marginLeft: 20,
+          <div style={{ zIndex: 2 }} className="w-[85%] relative ">
+            <Slider
+              range
+              className="custom-slider"
+              marks={marks}
+              value={ranges[day]?.flat() || []}
+              onChange={(value) => handleChange(day, value)}
+              step={1}
+              min={0}
+              max={24}
+              disabled={
+                !(enabledDays[day] || (day !== "Saturday" && day !== "Sunday"))
+              }
+              style={{ zIndex: 3 }}
+              trackStyle={[{ backgroundColor: "transparent" }]}
+              tooltip={{
+                open: true,
+                formatter: (value: number | undefined) =>
+                  formatTime(value ?? 0),
               }}
             />
-          </p>
+
+            <div
+              className="mx-auto absolute h-2 w-[100%] top-[2px] pointer-events-none"
+              style={{
+                zIndex: 3,
+              }}
+            >
+              {ranges[day]?.map((range: any, index: number) => (
+                <div
+                  key={index}
+                  className="range-bar absolute top-[10px] shadow-lg rounded flex items-center justify-center h-full pointer-events-auto transition-all duration-300"
+                  style={{
+                    left: `calc(${(range[0] / 24) * 100}% + 0.5%)`,
+                    width: `${((range[1] - range[0]) / 24) * 98}%`,
+                    background: "linear-gradient(to right, #36b37e, #5eeb91)",
+                  }}
+                >
+                  <Tooltip title="Delete Range" placement="top">
+                    <Button
+                      type="primary"
+                      danger
+                      icon={<DeleteOutlined />}
+                      shape="circle"
+                      size="small"
+                      onClick={() => handleDeleteRange(day, index)}
+                      className=" opacity-0 transition-opacity duration-300 pointer-events-auto delete-button"
+                    />
+                  </Tooltip>
+                </div>
+              ))}
+            </div>
+          </div>
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => handleAddRange(day)}
+            className="bg-green-600 border-green-600 text-white"
+          />
         </div>
       ))}
     </div>

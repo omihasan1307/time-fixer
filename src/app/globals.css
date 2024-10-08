@@ -30,33 +30,32 @@ body {
   opacity: 0;
 }
 
-/* Show delete button on hover */
 .range-bar:hover .delete-button {
   opacity: 1;
 }
 
 .custom-slider .ant-slider-handle:hover {
-  background-color: #36b37e !important; /* Ensure the handle color remains */
-  border-color: #36b37e !important; /* Ensure the border color remains */
+  background-color: #36b37e !important;
+  border-color: #36b37e !important;
 }
 
 .custom-slider .ant-slider-track:hover {
-  background-color: transparent !important; /* Remove blue hover effect */
+  background-color: transparent !important;
 }
 
 :where(.custom-slider).ant-slider-horizontal .ant-slider-rail {
-  height: 8px !important; /* Optional: set height for the rail */
-  background-color: #f0f2f5 !important; /* Optional: set rail color */
+  height: 8px !important;
+  background-color: #f0f2f5 !important;
 }
 
 :where(.custom-slider).ant-slider-horizontal .ant-slider-track,
 :where(.custom-slider).ant-slider-horizontal .ant-slider-tracks {
-  height: 6px; /* Optional: set height for track */
+  height: 6px;
 }
 
 :where(.custom-slider).ant-slider .ant-slider-track {
-  background-color: transparent; /* Set the default track color to transparent */
-  border-radius: 2px; /* Optional: border radius */
+  background-color: transparent;
+  border-radius: 2px;
 }
 
 :where(.css-dev-only-do-not-override-ccdg5a).ant-slider:hover
@@ -71,8 +70,8 @@ body {
   inset-inline-start: 0;
   width: 10px;
   height: 10px;
-  background-color: #181818; /* Color for the handle */
-  box-shadow: 0 0 0 2px #36b37e; /* Outline for the handle */
+  background-color: #181818;
+  box-shadow: 0 0 0 2px #36b37e;
   border-radius: 50%;
   cursor: pointer;
   transition: inset-inline-start 0.2s, inset-block-start 0.2s, width 0.2s,
@@ -89,52 +88,3 @@ body {
   box-shadow: 0 6px 16px 0 rgba(255, 255, 255, 0.08),
     0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(255, 255, 255, 0.05);
 }
-
-/* :where(.css-dev-only-do-not-override-ccdg5a).ant-slider-horizontal
-  .ant-slider-rail {
-  height: 8px !important;
-  background-color: #f0f2f5 !important;
-}
-
-:where(.css-dev-only-do-not-override-ccdg5a).ant-slider-horizontal
-  .ant-slider-track,
-:where(.css-dev-only-do-not-override-ccdg5a).ant-slider-horizontal
-  .ant-slider-tracks {
-  height: 6px;
-}
-
-:where(.css-dev-only-do-not-override-ccdg5a).ant-slider .ant-slider-track {
-  background-color: #36b37e;
-  border-radius: 2px;
-}
-
-:where(.css-dev-only-do-not-override-ccdg5a).ant-slider
-  .ant-slider-handle::after {
-  content: "";
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  width: 10px;
-  height: 10px;
-  background-color: #181818;
-  box-shadow: 0 0 0 2px #36b37e;
-  outline: 0px solid transparent;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: inset-inline-start 0.2s, inset-block-start 0.2s, width 0.2s,
-    height 0.2s, box-shadow 0.2s, outline 0.2s;
-}
-
-:where(.css-dev-only-do-not-override-ccdg5a).ant-tooltip .ant-tooltip-inner {
-  min-width: 1em;
-  min-height: 32px;
-  padding: 6px 8px;
-  color: #000000;
-  text-align: start;
-  text-decoration: none;
-  word-wrap: break-word;
-  background-color: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 6px 16px 0 rgba(255, 255, 255, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(255, 255, 255, 0.05);
-  box-sizing: border-box;
-} */
