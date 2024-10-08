@@ -26,6 +26,15 @@ body {
   }
 }
 
+:where(.css-ccdg5a).ant-slider:hover .ant-slider-track {
+  background-color: #f0f2f5;
+}
+
+:where(.custom-slider).ant-slider-horizontal .ant-slider-track,
+:where(.custom-slider).ant-slider-horizontal .ant-slider-tracks {
+  height: 0px;
+}
+
 .range-bar .delete-button {
   opacity: 0;
 }
